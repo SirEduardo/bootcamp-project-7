@@ -1,8 +1,9 @@
 const UserRoutes = require('express').Router()
 const { isAuth } = require('../../middlewares/auth.middleware')
-const { registerUser, loginUser } = require('../controllers/users')
+const { registerUser, loginUser, getusers } = require('../controllers/users')
 
-UserRoutes.post('/register', isAuth, registerUser)
+UserRoutes.get("/", getusers)
+UserRoutes.post('/register', registerUser)
 UserRoutes.post('/login', loginUser)
 
 module.exports = UserRoutes
