@@ -3,9 +3,9 @@ const User = require('../models/users')
 const bcrypt = require("bcrypt")
 
 
-const getusers = async (req, res, next) => {
+const getUsers = async (req, res, next) => {
     try {
-        const users = User.find()
+        const users = await User.find()
         return res.status(200).json(users)
     } catch (error) {
         return res.status(400).json("No se han encontrado usuarios")
@@ -21,7 +21,7 @@ const registerUser = async (req, res, next) => {
         })
         const userExist = await User.findOne({userName: req.body.userName})
         if(userExist){
-            return res.status(400).json("error registrando al usuario")
+            return res.status(400).json("Este usuario ya existe")
         }
         const userSaved = await newUser.save()
         return res.status(201).json(userSaved)
@@ -37,8 +37,8 @@ const loginUser = async (req, res, next) => {
             return res.status(400).json("Contraseña o usuario incorrectos")
         }
         if (bcrypt.compareSync(req.body.password, user.password)){
-            const token = generateToken(user._id, user.userName)
-            return res.status(200).json(token)
+            const token = generateToken(user._id)
+            return res.status(200).json({ user, token })
         }else {
             return res.status(400).json("Contraseña o usuario incorrectos")
         }
@@ -47,4 +47,4 @@ const loginUser = async (req, res, next) => {
     }
 }
 
-module.exports = { getusers, registerUser, loginUser }
+module.exports = { getUsers, registerUser, loginUser }
