@@ -71,10 +71,13 @@ const deleteUser = async (req, res, next) => {
 
 
 const deleteSelf = async (req, res, next) => {
-    const { id } = req.user
+    const { id } = req.params
     try {
-        const deletedUser = await User.findByIdAndDelete(id)
-        return res.status(200).json(deletedUser)
+        if(req.user.id === id){
+            const deletedUser = await User.findByIdAndDelete(id)
+            return res.status(200).json(deletedUser)
+        }
+        return res.status(400).json("Otro usuario no puede eliminarme")
     } catch (error) {
         return res.status(400).json("Error al eliminarme")   
     }
