@@ -38,9 +38,9 @@ const deleteWine = async (req, res, next) => {
 const updateWine = async (req, res, next) => {
   const { id } = req.params;
   try {
-    const oldWine = await Wine.find(id);
+    const oldWine = await Wine.findById(id);
     const updatedWinery = [
-      ...new set([...oldWine.wineries, ...req.body.wineries]),
+      ...new Set([...oldWine.wineries, ...req.body.wineries]),
     ];
     const updatedData = {
       ...req.body,
@@ -51,7 +51,7 @@ const updateWine = async (req, res, next) => {
     });
     return res.status(200).json(wineUpdated);
   } catch (error) {
-    return res.status(400).json(error);
+    return res.status(400).json("Error al actualizar el vino");
   }
 };
 

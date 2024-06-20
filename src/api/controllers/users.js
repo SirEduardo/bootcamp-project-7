@@ -47,4 +47,38 @@ const loginUser = async (req, res, next) => {
     }
 }
 
-module.exports = { getUsers, registerUser, loginUser }
+const updateUser = async (req, res, next) => {
+    const { id } = req.params
+    try {
+        const newUser = new User(req.body)
+        newUser._id = id
+        const userUpdated = await User.findByIdAndUpdate(id, newUser, {new:true})
+        return res.status(200).json(userUpdated)
+    } catch (error) {
+        return res.status(400).json("Error al actualizar el Usuario")
+    }
+}
+
+const deleteUser = async (req, res, next) => {
+    const { id } = req.params
+    try {
+        const deletedUser = await User.findByIdAndDelete(id)
+        return res.status(200).json(`Se ha eliminado a ${deletedUser}`)
+    } catch (error) {
+        
+    }
+}
+
+
+const deleteSelf = async (req, res, next) => {
+    const { id } = req.user
+    try {
+        const deletedUser = await User.findByIdAndDelete(id)
+        return res.status(200).json(deletedUser)
+    } catch (error) {
+        return res.status(400).json("Error al eliminarme")   
+    }
+}
+
+
+module.exports = { getUsers, registerUser, loginUser, updateUser, deleteUser, deleteSelf }

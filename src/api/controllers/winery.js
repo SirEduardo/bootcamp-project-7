@@ -38,16 +38,21 @@ const deleteWinery = async (req, res, next) => {
 const updateWinery = async (req, res, next) => {
     const { id } = req.params
     try {
-        const oldWinery = await Winery.find(id)
-        const updatedWines = [...new set([...oldWinery.wines, ...req.body.wines])]
+        const oldWinery = await Winery.findById(id)
+
+        if (!oldWinery){
+            return res.status(404).json("D.O no encontrada")
+        }
+        const updatedWines = [...new Set([...oldWinery.wines, ...req.body.wines])]
         const updatedData = {
             ...req.body,
-            wines:updatedWines
+            wines: updatedWines,
         }
         const updatedWinery = await Winery.findByIdAndUpdate(id, updatedData, { new: true })
+
         return res.status(200).json(updatedWinery)
     } catch (error) {
-        return res.status(400).json(error)
+        return res.status(400).json("Error al actualizar la D.O")
     }
 }
 
